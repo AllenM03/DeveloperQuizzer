@@ -109,3 +109,43 @@ var questionArray = [
         answer: "3"
     }
 ];
+var gameStatus = false;
+var sortArrayQuestions = [];
+var choiceArray = [];
+var currentQuestionIndex = 0;
+var currentSortArrayIndex = 0;
+var score = 0;
+
+//Timer function
+function countdown(timeleft) {
+    //   function for when a number is passed or not
+
+    if (!timeLeft) {
+        timeLeft = 120;
+    }
+  
+    timeInterval = setInterval(function () {
+        if (timeLeft > -1) {
+            timerEl.textContent = timeLeft;
+            timeLeft--;
+        } else {
+            // if timeLeft reaches 0, the game is over
+            gameStatus = false;
+            gameOver();
+        }
+    }, 1000);
+}
+
+// Allows the questionArray to render a random number
+function randomSort(arr) {
+    var count = arr.length;
+    var index = 0;
+
+    for (var i = 0; i < count; i++) {
+        index = Math.abs(Math.floor(Math.random() * count));
+        while (sortArrayQuestions.includes(index)) {
+            index = Math.abs(Math.floor(Math.random() * count));
+        }
+        sortArrayQuestions[i] = index;
+    }
+}
