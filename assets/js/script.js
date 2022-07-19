@@ -149,3 +149,20 @@ function randomSort(arr) {
         sortArrayQuestions[i] = index;
     }
 }
+
+// shows a message the Correct or Incorrect text after clicking the answer 
+function confirmAnswer() {
+    var timeOut = 3;
+    var timeFooter;
+    var footerQuestionEl = document.querySelector(".question-footer");
+
+    timeFooter = setInterval(function () { 
+        if (timeOut > 1) {
+            timeOut--;
+        } else {
+            //once three seconds is over, make the question-footer hide again
+            footerQuestionEl.setAttribute("style", "display: none;"); 
+            clearInterval(timeFooter);
+        }
+    }, 1000);
+}
