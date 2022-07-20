@@ -223,3 +223,76 @@ function initQuestion(currentSortArrayIndex) {
             li.appendChild(button);
         });
     } else {
+        // for the next questions, just replace the current buttons' textContent with the new question's ones
+        choiceArray.forEach(function(element, index) {
+            listClass = index + 1;
+            li = document.getElementsByClassName("li-"+listClass);
+            buttonOld = document.getElementsByClassName(listClass);
+            button = document.createElement("button");
+            button.textContent = listClass + ". " + element + " ";
+            button.setAttribute("class", listClass);
+            li[0].appendChild(button);
+            buttonOld[0].replaceWith(button);
+        });
+    }
+    
+}
+
+function gameOver() {
+    clearInterval(timeInterval);
+    // remove button choices
+    var ul = document.querySelector("#choices");
+    var footer = document.querySelector(".question-footer");
+    boxEl.removeChild(ul);
+    boxEl.removeChild(footer);
+
+    // replace header new text and depending on the score
+    questionEl.textContent = (score >= Math.round(questionArray.length * 0.70)) ? "All Done! You finished!" : "Better luck next time!";
+
+    // create the elements for the end-of-game page (form input, form button, and text)
+    var div = document.createElement("div");
+    div.setAttribute("class", "text-containter");
+    boxEl.appendChild(div);
+    
+    var text = document.createElement("p");
+    text.textContent = "Your final score is " + score +".";
+    div.appendChild(text);
+    
+    var form = document.createElement("form");
+    form.setAttribute("method", "POST");
+    div.appendChild(form);
+    
+    var labelForm = document.createElement("label");
+    labelForm.textContent = "Enter initials: ";
+    form.appendChild(labelForm);
+
+    var inputForm = document.createElement("input");
+    inputForm.setAttribute("type", "text");
+    labelForm.appendChild(inputForm);
+
+    var buttonForm = document.createElement("button");
+    buttonForm.setAttribute("class", "submit-button");
+    buttonForm.setAttribute("style", "width: 10vw; height: 40px;");
+    buttonForm.addEventListener("click", submitClick);
+    buttonForm.textContent = " Submit ";
+    labelForm.appendChild(buttonForm);
+}
+
+function submitClick(event) {
+    // prevent refreshing of page when Submit button is clicked
+    event.preventDefault();
+
+    var scoreArray = [];
+    // get stored userScores from localStorage
+    var userScores = JSON.parse(localStorage.getItem("userScores"));
+    
+    var userNewScore = {
+        name: document.querySelector("input").value.trim(),
+        score: score
+    };
+
+    // don't accept blank 
+    if (userNewScore.name === "") {
+        window.alert("Initials cannot be blank");
+        return;
+    }
