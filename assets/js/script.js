@@ -9,30 +9,13 @@ var resetButton = document.querySelector(".reset-button");
 var listEl = document.querySelector(".highscore-list-container");
 var buttonContainer = document.querySelector(".button-container");
 
-// Array of questions for quiz
-
+// variables for quiz
 var questionArray = [
     {
         question: "Which of the following keywords are used to define a variable in JavaScript?",
         choice1: "var",
         choice2: "let",
         choice3: "Both A and B",
-        choice4: "None of the above",
-        answer: "3"
-    },
-    {
-        question: "What is the output of typeof NaN?",
-        choice1: "null",
-        choice2: "undefined",
-        choice3: "number",
-        choice4: "string",
-        answer: "3"
-    },
-    {
-        question: "Which built-in method adds one or more elements to the end of an array and returns the new length of the array?",
-        choice1: "last()",
-        choice2: "put()",
-        choice3: "push()",
         choice4: "None of the above",
         answer: "3"
     },
@@ -53,14 +36,6 @@ var questionArray = [
         answer: "1"
     },
     {
-        question: "Which of the following keywords are used to define a variable in JavaScript?",
-        choice1: "var",
-        choice2: "let",
-        choice3: "Both A and B",
-        choice4: "None of the above",
-        answer: "3"
-    },
-    {
         question: "How do you stop an interval timer in JavaScript?",
         choice1: "clearInterval",
         choice2: "clearTimer",
@@ -77,12 +52,28 @@ var questionArray = [
         answer: "2"
     },
     {
-        question: "How can a datatype be declared to be a constant?",
+        question: "What is the output of typeof NaN?",
+        choice1: "null",
+        choice2: "undefined",
+        choice3: "number",
+        choice4: "string",
+        answer: "3"
+    },
+    {
+        question: "How can a dataytpe be declared to be a constant type?",
         choice1: "var",
         choice2: "let",
         choice3: "constant",
         choice4: "const",
         answer: "4"
+    },
+    {
+        question: "How are two values compared when they are checked with the strict equality operator (===)?",
+        choice1: "Their values are compared",
+        choice2: "Their datatypes are compared",
+        choice3: "Both 1 and 2",
+        choice4: "None of the above",
+        answer: "3"
     },
     {
         question: "How do you convert string to objects using JSON?",
@@ -101,10 +92,10 @@ var questionArray = [
         answer: "2"
     },
     {
-        question: "How are two values compared when they are checked with the strict equality operator (===)?",
-        choice1: "Their values are compared",
-        choice2: "Their datatypes are compared",
-        choice3: "Both 1 and 2",
+        question: "Which built-in method adds one or more elements to the end of an array and returns the new length of the array?",
+        choice1: "last()",
+        choice2: "put()",
+        choice3: "push()",
         choice4: "None of the above",
         answer: "3"
     }
@@ -116,10 +107,10 @@ var currentQuestionIndex = 0;
 var currentSortArrayIndex = 0;
 var score = 0;
 
-//Timer function
-function countdown(timeleft) {
-    //   function for when a number is passed or not
-
+// Timer that counts down 120 seconds
+function countdown(timeLeft) {
+    // made this function so that it could be used whether a number is passed or not
+    // if there is no number passed, assume that it is called to initially start the timer
     if (!timeLeft) {
         timeLeft = 120;
     }
@@ -129,14 +120,14 @@ function countdown(timeleft) {
             timerEl.textContent = timeLeft;
             timeLeft--;
         } else {
-            // if timeLeft reaches 0, the game is over
+            // the game is over when timer reaches 0
             gameStatus = false;
             gameOver();
         }
     }, 1000);
 }
 
-// Allows the questionArray to render a random question
+// Makes questions random
 function randomSort(arr) {
     var count = arr.length;
     var index = 0;
@@ -150,8 +141,8 @@ function randomSort(arr) {
     }
 }
 
-// shows a message the Correct or Incorrect text after clicking the answer 
-function confirmAnswer() {
+// Shows the Correct or Incorrect text after clicking the answer 
+function flashText() {
     var timeOut = 3;
     var timeFooter;
     var footerQuestionEl = document.querySelector(".question-footer");
@@ -177,7 +168,7 @@ function initQuestion(currentSortArrayIndex) {
     var footerQuestionEl;
     var footerHeader;
     var listClass = 0;
-
+    
     // replace header with question and move choices into a separate array
     currentQuestionIndex = sortArrayQuestions[currentSortArrayIndex];
     questionEl.textContent = questionArray[currentQuestionIndex].question;
@@ -187,7 +178,7 @@ function initQuestion(currentSortArrayIndex) {
         questionArray[currentQuestionIndex].choice3,
         questionArray[currentQuestionIndex].choice4
     ];
-
+    
     if (currentSortArrayIndex === 0) {
         // this handles the initial creation of answer buttons
         // remove text-container and add buttons for choices
@@ -207,7 +198,7 @@ function initQuestion(currentSortArrayIndex) {
         footerHeader = document.createElement("h2");
         footerHeader.setAttribute("class", "question-head");
         footerQuestionEl.append(footerHeader);
-        
+
         // Create button for every choice
         // add a class for each so that I could get it again later to check it against questionArray[answer]
         choiceArray.forEach(function(element, index) {
@@ -246,8 +237,8 @@ function gameOver() {
     boxEl.removeChild(ul);
     boxEl.removeChild(footer);
 
-    // replace header new text and depending on the score
-    questionEl.textContent = (score >= Math.round(questionArray.length * 0.70)) ? "All Done! You finished!" : "Better luck next time!";
+    // replace header new text and depending on the score either put Congrats or Better luck next time
+    questionEl.textContent = (score >= Math.round(questionArray.length * 0.70)) ? "Congratulations! All done!" : "Better luck next time! All done!";
 
     // create the elements for the end-of-game page (form input, form button, and text)
     var div = document.createElement("div");
@@ -317,13 +308,14 @@ function submitClick(event) {
         loadScores();   
     } 
 }
+
 boxEl.addEventListener("click", function (event) {
     var element = event.target;
     var timeLeft;
     var footerQuestionEl = document.querySelector(".question-footer");
     var footerHeader = document.querySelector(".question-head");
-
-    // when clicks are done on buttons
+    
+    // only care for clicks done on buttons
     if (element.matches("button")) {
         var chosenAnswer = element.getAttribute("class");
 
@@ -333,7 +325,7 @@ boxEl.addEventListener("click", function (event) {
                 sortArrayQuestions = [];    // initialise sort everytime the start button is pressed
                 currentQuestionIndex = 0;   // this would be the first element of the randomised array questions
                 gameStatus = true;
-
+            
                 randomSort(questionArray);
                 initQuestion(currentSortArrayIndex);
                 
@@ -359,8 +351,6 @@ boxEl.addEventListener("click", function (event) {
                     // show footer
                     flashText();
                     score++;
-                    //Add if else statements for next questions in quiz and clear interval and end game when timer reaches 0
-
                     if (currentSortArrayIndex < questionArray.length - 1) {
                         // show the next question
                         currentSortArrayIndex++;
@@ -376,23 +366,42 @@ boxEl.addEventListener("click", function (event) {
                     flashText();
 
                     clearInterval(timeInterval);
-                    timeLeft = timerEl.textContent = "Incorrect!";
+                    timeLeft = timerEl.textContent - 10;
                     if (timeLeft <= 0) {
-                        // when timer reaches 0, then game over
+                        // if time reaches 0, game is over
                         timerEl.textContent = 0;
                         footerQuestionEl.setAttribute("style", "display: none;");
                         gameStatus = false;
                         gameOver();
                     }
-                    countdown();
+                    countdown(timeLeft);
                 }
                 break;
-            }
+        }
     }
 });
 
-// function for oading high scores in highscores.html
-//creates an unordered list and 
+// function to load the scores into highscores.html
 function loadScores() {
-    var ul 
+    // create an unordered list and append every item in the userScores object into a list item
+    var ul = document.createElement("ul");
+    ul.setAttribute("id", "highscore-list");
+    ul.setAttribute("style", "text-align: left;")
+    listEl.appendChild(ul);
+
+    var userScores = JSON.parse(localStorage.getItem("userScores"));
+    
+    //  read each array and get its name and score
+    if (userScores !== null) {
+        userScores.forEach((element, index) => {
+            li = document.createElement("li");
+            listClass = index + 1;
+            li.setAttribute("class", "li-" + listClass);
+            li.textContent = listClass + ". " + element.name + " - " + element.score;
+            ul.appendChild(li);    
+        });        
+    } else {
+        // remove the reset button when the userScores is empty
+        buttonContainer.removeChild(resetButton);
+    }
 }
