@@ -360,3 +360,39 @@ boxEl.addEventListener("click", function (event) {
                     flashText();
                     score++;
                     //Add if else statements for next questions in quiz and clear interval and end game when timer reaches 0
+
+                    if (currentSortArrayIndex < questionArray.length - 1) {
+                        // show the next question
+                        currentSortArrayIndex++;
+                        initQuestion(currentSortArrayIndex);
+                    } else {
+                        footerQuestionEl.setAttribute("style", "display: none;");
+                        gameStatus = false;
+                        gameOver();
+                    }
+                } else {
+                    // Stop current timer, adjust timeLeft, and start countdown again with new timeLeft value
+                    footerHeader.textContent = "Incorrect!";
+                    flashText();
+
+                    clearInterval(timeInterval);
+                    timeLeft = timerEl.textContent = "Incorrect!";
+                    if (timeLeft <= 0) {
+                        // when timer reaches 0, then game over
+                        timerEl.textContent = 0;
+                        footerQuestionEl.setAttribute("style", "display: none;");
+                        gameStatus = false;
+                        gameOver();
+                    }
+                    countdown();
+                }
+                break;
+            }
+    }
+});
+
+// function for oading high scores in highscores.html
+//creates an unordered list and 
+function loadScores() {
+    var ul 
+}
