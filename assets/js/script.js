@@ -296,3 +296,67 @@ function submitClick(event) {
         window.alert("Initials cannot be blank");
         return;
     }
+
+    // Add new saved initial-score
+    if (userScores === null) {
+        scoreArray.push(userNewScore);
+    } else {
+        for (var i = 0; i < userScores.length; i++) {
+            scoreArray.push(userScores[i]);
+        }
+        scoreArray.push(userNewScore);
+        // sort scores in descending order
+        scoreArray = scoreArray.sort(function (c1, c2) { return c2.score - c1.score; });
+    }
+
+    localStorage.setItem("userScores", JSON.stringify(scoreArray));
+    // change webpage
+    window.location.href = "./highscores.html";
+    
+    if (window.onload && window.location.href === './highscores.html') {
+        loadScores();   
+    } 
+}
+boxEl.addEventListener("click", function (event) {
+    var element = event.target;
+    var timeLeft;
+    var footerQuestionEl = document.querySelector(".question-footer");
+    var footerHeader = document.querySelector(".question-head");
+
+    // when clicks are done on buttons
+    if (element.matches("button")) {
+        var chosenAnswer = element.getAttribute("class");
+
+        switch (chosenAnswer) {
+            case "start-button":
+                // do event when start button is clicked.
+                sortArrayQuestions = [];    // initialise sort everytime the start button is pressed
+                currentQuestionIndex = 0;   // this would be the first element of the randomised array questions
+                gameStatus = true;
+
+                randomSort(questionArray);
+                initQuestion(currentSortArrayIndex);
+                
+                // initially start counter with timeLeft = 120 seconds
+                countdown();
+                break;
+            case "back-button":
+                window.location.href = "./index.html";
+                break;
+            case "reset-button":
+                localStorage.setItem("userScores", null);
+        
+                // remove ul and li elements
+                var ul = document.querySelector("#highscore-list");
+                listEl.removeChild(ul);
+                // also remove clear highscores
+                buttonContainer.removeChild(resetButton);
+                break;
+            default:
+                footerQuestionEl.setAttribute("style", "font-style: italic; border-top: 3px black solid");
+                if (chosenAnswer === questionArray[currentQuestionIndex].answer) {
+                    footerHeader.textContent = "Correct!";
+                    // show footer
+                    flashText();
+                    score++;
+                    //Add if else statements for next questions in quiz and clear interval and end game when timer reaches 0
