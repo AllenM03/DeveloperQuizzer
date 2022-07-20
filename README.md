@@ -16,4 +16,4 @@ Then after the timer reaches zero or after all questions are answered, the user 
 
 ## Demo
 
-Check out [this](-------) to see the app in action.
+Check out [this](https://allenm03.github.io/DeveloperQuizzer/) to see the app in action.
