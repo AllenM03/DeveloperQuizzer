@@ -136,7 +136,7 @@ function countdown(timeleft) {
     }, 1000);
 }
 
-// Allows the questionArray to render a random number
+// Allows the questionArray to render a random question
 function randomSort(arr) {
     var count = arr.length;
     var index = 0;
@@ -166,3 +166,60 @@ function confirmAnswer() {
         }
     }, 1000);
 }
+
+function initQuestion(currentSortArrayIndex) {
+    // remove the current elements inside boxEl except for H1
+    // then dynamically create a list for the button answers
+    var ul;
+    var li;
+    var button;
+    var buttonOld;
+    var footerQuestionEl;
+    var footerHeader;
+    var listClass = 0;
+
+    // replace header with question and move choices into a separate array
+    currentQuestionIndex = sortArrayQuestions[currentSortArrayIndex];
+    questionEl.textContent = questionArray[currentQuestionIndex].question;
+    choiceArray = [
+        questionArray[currentQuestionIndex].choice1,
+        questionArray[currentQuestionIndex].choice2,
+        questionArray[currentQuestionIndex].choice3,
+        questionArray[currentQuestionIndex].choice4
+    ];
+
+    if (currentSortArrayIndex === 0) {
+        // this handles the initial creation of answer buttons
+        // remove text-container and add buttons for choices
+        boxEl.removeChild(textEl);
+        boxEl.setAttribute("style", "text-align: left;");
+
+        ul = document.createElement("ul");
+        ul.setAttribute("id", "choices");
+        boxEl.appendChild(ul);
+
+        // create 'footer' to show if answer is correct or not
+        footerQuestionEl = document.createElement("div");
+        footerQuestionEl.setAttribute("class", "question-footer");
+        footerQuestionEl.setAttribute("style", "display: none;");
+        boxEl.append(footerQuestionEl);
+    
+        footerHeader = document.createElement("h2");
+        footerHeader.setAttribute("class", "question-head");
+        footerQuestionEl.append(footerHeader);
+        
+        // Create button for every choice
+        // add a class for each so that I could get it again later to check it against questionArray[answer]
+        choiceArray.forEach(function(element, index) {
+            listClass = index + 1;
+            li = document.createElement("li");
+            button = document.createElement("button");
+            li.setAttribute("class", "li-" + listClass);
+            
+            button.textContent = listClass + ". " + element + " ";
+            button.setAttribute("class", listClass);
+            
+            ul.appendChild(li);
+            li.appendChild(button);
+        });
+    } else {
